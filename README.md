@@ -8,4 +8,11 @@
 ### Session 2: 05.06.2016
 * functional test with user story
 * functional test uses now unittest
-* use implicitly_wait from selenium
+* use **implicitly_wait** from selenium
+
+### Session 3: 10.06.2016
+* starting app: manage.py startapp name
+* using both functional and unit tests
+* Django unit test runner
+* **Django.core.urlresolver.resolve**, and urls
+* view function, **Django.http.HttpRequest**, **Django.http.HttpResponse**
