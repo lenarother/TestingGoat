@@ -16,3 +16,8 @@
 * Django unit test runner
 * **Django.core.urlresolver.resolve**, and urls
 * view function, **Django.http.HttpRequest**, **Django.http.HttpResponse**
+
+### Session 4: 11.06.2016
+* django.template.loader.render_to_string
+* testing whether right template is rendered: resonse.content.decode(), **render_to_string()**
+* selenium: **find_element_by_id**, **find_element[s]_by_tag_name**, **send_keys**, **Keys.ENTER**
