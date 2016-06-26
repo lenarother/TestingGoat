@@ -1,3 +1,8 @@
+"""
+Testing the to-do-list application from user point of view.
+(Functional test / black box test / acceptance test)
+"""
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
@@ -6,7 +11,11 @@ import unittest
 class NewVisitorTest(unittest.TestCase):
 
     def setUp(self):
-        self.browser = webdriver.Firefox()
+        # setup firefox_capabilities since Firefox driver isnot working
+        # since Firefox 47.0 and will be disabled in the future
+        firefox_capabilities = webdriver.DesiredCapabilities.FIREFOX
+        firefox_capabilities['marionette'] = True
+        self.browser = webdriver.Firefox(capabilities=firefox_capabilities)
         self.browser.implicitly_wait(3)
 
     def tearDown(self):
@@ -24,9 +33,11 @@ class NewVisitorTest(unittest.TestCase):
 
         # She is invinted to enter a to-do item straight away
         inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertEqual(inputbox.get_attribute('placeholder'), 'Enter a to-do item')
+        expected_text = 'Enter a to-do item'
+        self.assertEqual(inputbox.get_attribute('placeholder'), expected_text)
 
-        # She types "Buy peacock feathers" into a text box (Edith's hobby is tring fly-fishing lures)
+        # She types "Buy peacock feathers" into a text box
+        # (Edith's hobby is tring fly-fishing lures)
         inputbox.send_keys('Buy peacock feathers')
 
         # When she hits enter, the page updates, and now the page lists:
@@ -34,11 +45,14 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys(Keys.ENTER)
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(any(row.text == '1: Buy peacock feathers' for row in rows),
-            "New to-do item did not appear in table")
+        expected_text = '1: Buy peacock feathers'
+        error_message = "New to-do item did not appear in table"
+        self.assertTrue(any(row.text == expected_text for row in rows),
+                        error_message)
 
         # There is still a text box inviting her to add another item. She
-        # enters "Use peacock feathers to make a fly" (Edith is very methodical)
+        # enters "Use peacock feathers to make a fly"
+        # (Edith is very methodical)
         self.fail('Finish the test!')
 
         # The page updates again, and now shows both items on her lists
