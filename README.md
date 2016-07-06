@@ -21,3 +21,11 @@
 * django.template.loader.render_to_string
 * testing whether right template is rendered: resonse.content.decode(), **render_to_string()**
 * selenium: **find_element_by_id**, **find_element[s]_by_tag_name**, **send_keys**, **Keys.ENTER**
+
+### Session 5: 04.06.2016
+* html form: <fomr method="POST"></form>
+* Cross site request forgery {% csrf_token %}
+* redirect after POST
+* models.Model, makemigrations, migrate, testing model
+* {{ forloop.counter }}
+* Marionette web driver for selenium
