@@ -15,9 +15,11 @@ class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
         # setup firefox_capabilities since Firefox driver isnot working
         # since Firefox 47.0 and will be disabled in the future
-        firefox_capabilities = webdriver.DesiredCapabilities.FIREFOX
-        firefox_capabilities['marionette'] = True
-        self.browser = webdriver.Firefox(capabilities=firefox_capabilities)
+        self.firefox_capabilities = webdriver.DesiredCapabilities.FIREFOX
+        self.firefox_capabilities['marionette'] = True
+        self.browser = webdriver.Firefox(
+            capabilities=self.firefox_capabilities
+        )
         self.browser.implicitly_wait(15)
 
     def tearDown(self):
@@ -48,9 +50,12 @@ class NewVisitorTest(LiveServerTestCase):
         # (Edith's hobby is tring fly-fishing lures)
         inputbox.send_keys('Buy peacock feathers')
 
-        # When she hits enter, the page updates, and now the page lists:
-        # "1: Buy peacock feathers" as an item in a to-do lists
+        # When she hits enter, she is taken to a new URL,
+        # and now the page lists "1: Buy peacocks feathers" as an item in a
+        # to-do list table
         inputbox.send_keys(Keys.ENTER)
+        edith_list_url = self.browser.current_url
+        self.assertRegex(edith_list_url, '/lists/.+')
         self.check_for_row_in_table_list('1: Buy peacock feathers')
 
         # There is still a text box inviting her to add another item. She
@@ -66,11 +71,36 @@ class NewVisitorTest(LiveServerTestCase):
             '2: Use peacock feathers to make a fly'
         )
 
-        # Edith wonders whether the site will remember her list. Then she sees
-        # that the site has generated a unique URL for her -- there is some
-        # explenatory text to that effect.
-        self.fail('Finish the test!')
+        # Now a new user, Francis, comes along to the site.
 
-        # She visits the URL - her to-do list is still there.
+        # We use a new browser session to make sure that no information
+        # of Edith's is coming through from cookies etc.
+        self.browser.quit()
+        self.browser = webdriver.Firefox(
+            capabilities=self.firefox_capabilities
+        )
 
-        # Satisfied, she goes back to sleep
+        # Francis visits the home page. There is no sign of Edith's
+        # list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('Make a fly', page_text)
+
+        # Francis starts a new list by entering a new item. He
+        # is less interesting than Edith...
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
+
+        # Francis gets his own unique URL
+        francis_list_url = self.browser.current_url
+        self.assertRegex(francis_list_url, '/list/.+')
+        self.assertNotEqual(francis_list_url, edith_list_url)
+
+        # Again, there is no trace of Edith's list
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('Make a fly', page_text)
+
+        # Satisfied, they both go back to sleep
