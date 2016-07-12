@@ -6,6 +6,9 @@ Testing the to-do-list application from user point of view.
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions
 
 from django.test import LiveServerTestCase
 
@@ -54,6 +57,11 @@ class NewVisitorTest(LiveServerTestCase):
         # and now the page lists "1: Buy peacocks feathers" as an item in a
         # to-do list table
         inputbox.send_keys(Keys.ENTER)
+        # Wait until ENTER is sent and Buy... appears in the table
+        WebDriverWait(self.browser, 10).until(
+            expected_conditions.text_to_be_present_in_element(
+                (By.ID, "id_list_table"), 'Buy peacock feathers')
+        )
         edith_list_url = self.browser.current_url
         self.assertRegex(edith_list_url, '/lists/.+')
         self.check_for_row_in_table_list('1: Buy peacock feathers')
@@ -64,13 +72,15 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Use peacock feathers to make a fly')
         inputbox.send_keys(Keys.ENTER)
-
-        # The page updates again, and now shows both items on her lists
+        # Wait until ENTER is sent and Use... appears in the table
+        WebDriverWait(self.browser, 10).until(
+            expected_conditions.text_to_be_present_in_element(
+                (By.ID, "id_list_table"), 'Use peacock feathers to make a fly')
+        )
         self.check_for_row_in_table_list('1: Buy peacock feathers')
         self.check_for_row_in_table_list(
             '2: Use peacock feathers to make a fly'
         )
-
         # Now a new user, Francis, comes along to the site.
 
         # We use a new browser session to make sure that no information
@@ -93,9 +103,14 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys('Buy milk')
         inputbox.send_keys(Keys.ENTER)
 
+        # Wait until ENTER is sent and Buy milk appears in the table
+        WebDriverWait(self.browser, 10).until(
+            expected_conditions.text_to_be_present_in_element(
+                (By.ID, "id_list_table"), 'Buy milk')
+        )
         # Francis gets his own unique URL
         francis_list_url = self.browser.current_url
-        self.assertRegex(francis_list_url, '/list/.+')
+        self.assertRegex(francis_list_url, '/lists/.+')
         self.assertNotEqual(francis_list_url, edith_list_url)
 
         # Again, there is no trace of Edith's list
