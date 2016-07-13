@@ -29,3 +29,23 @@
 * models.Model, makemigrations, migrate, testing model
 * {{ forloop.counter }}
 * Marionette web driver for selenium
+
+### Session 6: 13.07.2016
+* django.test.LiveServerTestCase: self.live_server_url
+* REST-based design
+* assertRegex (unittest)
+* django.test.TestCase: response = self.client.get(url)
+* django.test.TestCase: self.assertRedirects(response, url)
+* django.test.TestCase: self.assertTemplateUsed(response, template)
+* self.client.post(url, data)
+* 302 - redirect
+* 404 - not found
+* 444 - connection closed without response
+* html form: <fomr method="POST" action="url"></form>
+* models.ForeignHey(ModelClassName, default)
+* Model.objects.create
+* capture grupes in urls e.g. "^/(\d+)/$" - argument in view
+* selenium.webdriver.common.by.By
+* selenium.webdriver.support.ui.WebDriverWait
+* selenium.webdriver.support.expected_conditions
+* expected_conditions.text_to_be_present_in_element
