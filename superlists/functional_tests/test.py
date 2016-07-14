@@ -119,3 +119,28 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotIn('Make a fly', page_text)
 
         # Satisfied, they both go back to sleep
+
+    def test_layout_and_styling(self):
+        # Edith goes to the homepage
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        # She notices the input box is nicely centered
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512, delta=5
+        )
+
+        # She starts a new list and sees the imput is nicly centered there too
+        inputbox.send_keys('testing')
+        inputbox.send_keys(Keys.ENTER)
+        WebDriverWait(self.browser, 10).until(
+            expected_conditions.text_to_be_present_in_element(
+                (By.ID, "id_list_table"), 'testing')
+        )
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512, delta=5
+        )
