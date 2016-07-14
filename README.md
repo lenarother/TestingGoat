@@ -2,6 +2,8 @@
 
 [Test-Driven Development with Python](http://chimera.labs.oreilly.com/books/1234000000754/)
 
+# Part I
+
 ### Session 1: 03.06.2016
 * functional test with plain assert
 
@@ -49,3 +51,15 @@
 * selenium.webdriver.support.ui.WebDriverWait
 * selenium.webdriver.support.expected_conditions
 * expected_conditions.text_to_be_present_in_element
+
+
+# Part II
+
+### Session 7: 14.07.2016
+* don't test layout, test some basics to check whether static files are loaded
+* browser.set_window_size
+* template inharitance: {% block name %}{% endblock %}, {% extends 'template.html' %}
+* STATIC_URL for static files included in meta head
+* STATIC_ROOT for collecting static
+* django.contrib.staticfiles.testing.StaticLiveServerTestCase
+* bootstrap jumbotron
