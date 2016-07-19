@@ -1,10 +1,5 @@
-"""
-Testing the to-do-list application from user point of view.
+"""Testing feature: create and fill in an individual list."""
 
-(Functional test / black box test / acceptance test)
-"""
-
-import sys
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -12,38 +7,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from .base import FunctionalTest
 
 
-class NewVisitorTest(StaticLiveServerTestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        for arg in sys.argv:
-            if 'liveserver' in arg:
-                cls.server_url = 'http://' + arg.split('=')[1]
-                return
-        super().setUpClass()
-        cls.server_url = cls.live_server_url
-
-    def setUp(self):
-        # setup firefox_capabilities since Firefox driver isnot working
-        # since Firefox 47.0 and will be disabled in the future
-        self.firefox_capabilities = webdriver.DesiredCapabilities.FIREFOX
-        self.firefox_capabilities['marionette'] = True
-        self.browser = webdriver.Firefox(
-            capabilities=self.firefox_capabilities
-        )
-        self.browser.implicitly_wait(15)
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def check_for_row_in_table_list(self, row_text):
-        texts = [
-            el.text for el in self.browser.find_elements_by_tag_name('tr')
-        ]
-        self.assertIn(row_text, texts)
+class NewVisitorTest(FunctionalTest):
 
     def test_can_start_a_list_and_retrive_it_later(self):
         # Edith has heard about a cool new online to-do app. She goes
@@ -130,28 +97,3 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertNotIn('Make a fly', page_text)
 
         # Satisfied, they both go back to sleep
-
-    def test_layout_and_styling(self):
-        # Edith goes to the homepage
-        self.browser.get(self.server_url)
-        self.browser.set_window_size(1024, 768)
-
-        # She notices the input box is nicely centered
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2,
-            512, delta=5
-        )
-
-        # She starts a new list and sees the imput is nicly centered there too
-        inputbox.send_keys('testing')
-        inputbox.send_keys(Keys.ENTER)
-        WebDriverWait(self.browser, 10).until(
-            expected_conditions.text_to_be_present_in_element(
-                (By.ID, "id_list_table"), 'testing')
-        )
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2,
-            512, delta=5
-        )
