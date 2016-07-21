@@ -1,31 +1,20 @@
-from django.core.urlresolvers import resolve
-from django.http import HttpRequest
 from django.test import TestCase
-from django.template.loader import render_to_string
 from django.utils.html import escape
 
+from lists.forms import ItemForm
 from lists.models import Item, List
-from lists.views import home_page
 
 
 class HomePageTests(TestCase):
     """View tests."""
 
-    def test_root_url_resolves_to_home_page_view(self):
-        find = resolve('/')
-        self.assertEqual(find.func, home_page)
+    def test_home_page_renders_home_template(self):
+        response = self.client.get('/')
+        self.assertTemplateUsed(response, 'home.html')
 
-    def test_home_page_returns_correct_html(self):
-        request = HttpRequest()
-        response = home_page(request)
-        # passing request to render_to_string makes
-        # this function work with crsf_token
-        expected_html = render_to_string(
-            'home.html',
-            {'item_text': 'A new list item'},
-            request=request)
-
-        self.assertEqual(expected_html, response.content.decode())
+    def test_home_page_uses_item_form(self):
+        response = self.client.get('/')
+        self.assertIsInstance(response.context['form'], ItemForm)
 
 
 class NewListTest(TestCase):
