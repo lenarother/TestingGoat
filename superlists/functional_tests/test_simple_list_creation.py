@@ -3,9 +3,6 @@
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
 
 from .base import FunctionalTest
 
@@ -23,7 +20,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertIn('To-Do', header_text)
 
         # She is invinted to enter a to-do item straight away
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.get_item_input_box()
         expected_text = 'Enter a to-do item'
         self.assertEqual(inputbox.get_attribute('placeholder'), expected_text)
 
@@ -36,10 +33,7 @@ class NewVisitorTest(FunctionalTest):
         # to-do list table
         inputbox.send_keys(Keys.ENTER)
         # Wait until ENTER is sent and Buy... appears in the table
-        WebDriverWait(self.browser, 10).until(
-            expected_conditions.text_to_be_present_in_element(
-                (By.ID, "id_list_table"), 'Buy peacock feathers')
-        )
+        self.wait_for_item_in_table('Buy peacock feathers')
         edith_list_url = self.browser.current_url
         self.assertRegex(edith_list_url, '/lists/.+')
         self.check_for_row_in_table_list('1: Buy peacock feathers')
@@ -47,14 +41,11 @@ class NewVisitorTest(FunctionalTest):
         # There is still a text box inviting her to add another item. She
         # enters "Use peacock feathers to make a fly"
         # (Edith is very methodical)
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.get_item_input_box()
         inputbox.send_keys('Use peacock feathers to make a fly')
         inputbox.send_keys(Keys.ENTER)
         # Wait until ENTER is sent and Use... appears in the table
-        WebDriverWait(self.browser, 10).until(
-            expected_conditions.text_to_be_present_in_element(
-                (By.ID, "id_list_table"), 'Use peacock feathers to make a fly')
-        )
+        self.wait_for_item_in_table('Use peacock feathers to make a fly')
         self.check_for_row_in_table_list('1: Buy peacock feathers')
         self.check_for_row_in_table_list(
             '2: Use peacock feathers to make a fly'
@@ -77,15 +68,12 @@ class NewVisitorTest(FunctionalTest):
 
         # Francis starts a new list by entering a new item. He
         # is less interesting than Edith...
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.get_item_input_box()
         inputbox.send_keys('Buy milk')
         inputbox.send_keys(Keys.ENTER)
 
         # Wait until ENTER is sent and Buy milk appears in the table
-        WebDriverWait(self.browser, 10).until(
-            expected_conditions.text_to_be_present_in_element(
-                (By.ID, "id_list_table"), 'Buy milk')
-        )
+        self.wait_for_item_in_table('Buy milk')
         # Francis gets his own unique URL
         francis_list_url = self.browser.current_url
         self.assertRegex(francis_list_url, '/lists/.+')
