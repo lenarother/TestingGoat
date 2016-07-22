@@ -7,6 +7,10 @@ Base case for testing the to-do-list application from user point of view.
 import sys
 
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions
+
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 
@@ -44,3 +48,13 @@ class FunctionalTest(StaticLiveServerTestCase):
             el.text for el in self.browser.find_elements_by_tag_name('tr')
         ]
         self.assertIn(row_text, texts)
+
+    def get_item_input_box(self):
+        return self.browser.find_element_by_id('id_text')
+
+    def wait_for_item_in_table(self, item):
+        WebDriverWait(self.browser, 10).until(
+            expected_conditions.text_to_be_present_in_element(
+                (By.ID, "id_list_table"), item)
+        )
+        return
