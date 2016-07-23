@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 
 from lists.forms import ItemForm
-from lists.models import Item, List
+from lists.models import List
 
 
 def home_page(request):
@@ -28,9 +28,3 @@ def new_list(request):
         return redirect(list_)
     else:
         return render(request, 'home.html', {'form': form})
-
-
-def add_item(request, list_id):
-    list_ = List.objects.get(id=list_id)
-    Item.objects.create(text=request.POST['text'], list=list_)
-    return redirect(list_)
