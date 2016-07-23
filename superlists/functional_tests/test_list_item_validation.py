@@ -3,9 +3,6 @@
 
 # from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
 
 from .base import FunctionalTest
 
@@ -44,9 +41,25 @@ class InputValidationTest(FunctionalTest):
         inputbox = self.get_item_input_box()
         inputbox.send_keys('Make tea')
         inputbox.send_keys(Keys.ENTER)
-        WebDriverWait(self.browser, 10).until(
-            expected_conditions.text_to_be_present_in_element(
-                (By.ID, "id_list_table"), 'Make tea')
-        )
+        self.wait_for_item_in_table('Make tea')
         self.check_for_row_in_table_list('1: Buy milk')
         self.check_for_row_in_table_list('2: Make tea')
+
+    def test_cannot_add_duplicate_items(self):
+        # Edith goes to the home page and starts a new list
+        self.browser.get(self.server_url)
+        inputbox = self.get_item_input_box()
+        inputbox.send_keys('Buy wellies')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_item_in_table('Buy wellies')
+        self.check_for_row_in_table_list('1: Buy wellies')
+
+        # She accidentally tries to enter a duplicated item
+        inputbox = self.get_item_input_box()
+        inputbox.send_keys('Buy wellies')
+        inputbox.send_keys(Keys.ENTER)
+
+        # She sees a helpful error message
+        self.check_for_row_in_table_list('1: Buy wellies')
+        error = self.browser.find_element_by_css_selector('.hass-error')
+        self.assertEqual(error.text, "You've already got it in your list")
