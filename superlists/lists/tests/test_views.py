@@ -1,5 +1,3 @@
-from unittest import skip
-
 from django.test import TestCase
 from django.utils.html import escape
 
@@ -119,7 +117,6 @@ class ListViewTest(TestCase):
         self.assertIsInstance(response.context['form'], ItemForm)
         self.assertContains(response, 'name="text"')
 
-    @skip
     def test_duplicate_item_validation_error_end_up_on_lists_page(self):
         list1 = List.objects.create()
         Item.objects.create(list=list1, text='foo')
