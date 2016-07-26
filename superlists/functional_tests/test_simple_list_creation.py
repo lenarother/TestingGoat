@@ -1,4 +1,4 @@
-"""Testing feature: create and fill in an individual list."""
+"""Tests for feature: create and fill in an individual list."""
 
 
 from selenium import webdriver
