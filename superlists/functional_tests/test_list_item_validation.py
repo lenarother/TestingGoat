@@ -58,8 +58,9 @@ class InputValidationTest(FunctionalTest):
         inputbox = self.get_item_input_box()
         inputbox.send_keys('Buy wellies')
         inputbox.send_keys(Keys.ENTER)
+        self.wait_for_item_in_table('Buy wellies')
 
         # She sees a helpful error message
         self.check_for_row_in_table_list('1: Buy wellies')
-        error = self.browser.find_element_by_css_selector('.hass-error')
+        error = self.browser.find_element_by_css_selector('.has-error')
         self.assertEqual(error.text, "You've already got it in your list")
