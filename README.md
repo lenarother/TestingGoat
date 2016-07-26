@@ -89,3 +89,10 @@ Wait until the Internet is working
 * form.is_valid()
 * form(data=request.POST)
 * customized save method: do thing and return super().save()
+
+### Chapter 12
+* class Meta in models: unique_together, ordering
+* super
+* overwriting form constructor to let the form know another view
+* method validate_unique in form and model
+* how to test views
