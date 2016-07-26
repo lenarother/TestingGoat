@@ -2,7 +2,8 @@ from django.test import TestCase
 from django.utils.html import escape
 
 from lists.forms import (
-    EMPTY_ITEM_ERROR, DUPLICATED_ITEM_ERROE, ItemForm
+    EMPTY_ITEM_ERROR, DUPLICATED_ITEM_ERROE,
+    ItemForm, ExistingListItemForm
 )
 from lists.models import Item, List
 
@@ -60,11 +61,11 @@ class NewListTest(TestCase):
 class ListViewTest(TestCase):
 
     def post_invalid_input(self):
-        """Return response."""
+        """Send empty string to a list and return response."""
         list_ = List.objects.create()
         return self.client.post(
             '/lists/{}/'.format(list_.id),
-            data={'text': ''})
+            data={'for_list': list_, 'text': ''})
 
     def test_uses_list_template(self):
         list_ = List.objects.create()
@@ -105,7 +106,7 @@ class ListViewTest(TestCase):
 
     def test_for_invalid_input_passes_form_to_template(self):
         response = self.post_invalid_input()
-        self.assertIsInstance(response.context['form'], ItemForm)
+        self.assertIsInstance(response.context['form'], ExistingListItemForm)
 
     def test_for_invalid_input_show_error_on_page(self):
         response = self.post_invalid_input()
@@ -114,7 +115,7 @@ class ListViewTest(TestCase):
     def test_display_item_form(self):
         list_ = List.objects.create()
         response = self.client.get('/lists/{}/'.format(list_.id))
-        self.assertIsInstance(response.context['form'], ItemForm)
+        self.assertIsInstance(response.context['form'], ExistingListItemForm)
         self.assertContains(response, 'name="text"')
 
     def test_duplicate_item_validation_error_end_up_on_lists_page(self):

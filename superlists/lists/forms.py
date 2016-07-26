@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from lists.models import Item
 
 EMPTY_ITEM_ERROR = "You can't have an empty list item"
-DUPLICATED_ITEM_ERROE = "You've already have it in your list"
+DUPLICATED_ITEM_ERROE = "You've already got it in your list"
 
 
 class ItemForm(forms.models.ModelForm):
@@ -39,3 +39,6 @@ class ExistingListItemForm(ItemForm):
         except ValidationError as e:
             e.error_dict = {'text': [DUPLICATED_ITEM_ERROE]}
             self._update_errors(e)
+
+    def save(self):
+        return forms.models.ModelForm.save(self)
