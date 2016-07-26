@@ -2,6 +2,8 @@
 Base case for testing the to-do-list application from user point of view.
 
 (Base for Functional test / black box test / acceptance test)
+Starts browser, distinguish between live and local server,
+contains helper functions.
 """
 
 import sys

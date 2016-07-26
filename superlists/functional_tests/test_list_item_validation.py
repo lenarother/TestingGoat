@@ -1,4 +1,4 @@
-"""Testing feature: create and fill in an individual list."""
+"""Tests for feature: user sees warning on sending invalid input ."""
 
 
 # from selenium import webdriver

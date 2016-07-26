@@ -1,4 +1,4 @@
-"""Teasting feature: to-do list is pretty - css is loaded."""
+"""Tests for feature: to-do list is pretty - css is loaded."""
 
 from selenium.webdriver.common.keys import Keys
 
