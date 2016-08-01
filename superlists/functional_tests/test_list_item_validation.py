@@ -9,6 +9,9 @@ from .base import FunctionalTest
 
 class InputValidationTest(FunctionalTest):
 
+    def get_error_element(self):
+        return self.browser.find_element_by_css_selector('.has-error')
+
     def test_cannot_add_empty_list_items(self):
         # Edith goes to the home page and accidentally tries to submit
         # an empty list item. She hits Enter on the empty imput box.
@@ -19,7 +22,7 @@ class InputValidationTest(FunctionalTest):
 
         # The hompe page refreshes, and there is an error massage saying
         # the list items cannot be blank
-        error = self.browser.find_element_by_css_selector('.has-error')
+        error = self.get_error_element()
         self.assertEqual(error.text, "You can't have an empty list item")
 
         # She tries again with some text for the item, which now works
@@ -34,7 +37,7 @@ class InputValidationTest(FunctionalTest):
 
         # She receives a similar warning on the list page
         self.check_for_row_in_table_list('1: Buy milk')
-        error = self.browser.find_element_by_css_selector('.has-error')
+        error = self.get_error_element()
         self.assertEqual(error.text, "You can't have an empty list item")
 
         # And she can correct it by filling some text in
@@ -62,5 +65,21 @@ class InputValidationTest(FunctionalTest):
 
         # She sees a helpful error message
         self.check_for_row_in_table_list('1: Buy wellies')
-        error = self.browser.find_element_by_css_selector('.has-error')
+        error = self.get_error_element()
         self.assertEqual(error.text, "You've already got it in your list")
+
+    def test_error_messages_are_cleared_on_input(self):
+        # Edith starts a new list in a way taht causes a validation error
+        self.browser.get(self.server_url)
+        inputbox = self.get_item_input_box()
+        inputbox.send_keys(Keys.ENTER)
+        error = self.get_error_element()
+        self.assertTrue(error.is_displayed())
+
+        # She starts writing in the input box to clear the error
+        inputbox = self.get_item_input_box()
+        inputbox.send_keys('a')
+
+        # She is pleased to see that the error message dissapears
+        error = self.get_error_element()
+        self.assertFalse(error.is_displayed())
