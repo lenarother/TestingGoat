@@ -63,3 +63,9 @@
 * STATIC_ROOT for collecting static
 * django.contrib.staticfiles.testing.StaticLiveServerTestCase
 * bootstrap jumbotron
+
+### Session 8: 02.08.2016
+* make notes and templates
+* assure user account with home folder
+* provision: see provisioning_notes.md in deploy_tools
+* deploy: create directory sutructure, pull source code form git, activate venv, install reuiremnets, migrate, collectstatic, update settings (DEBUG, ALLOWED_HOSTS), restart gunicorn job, run functional tools
