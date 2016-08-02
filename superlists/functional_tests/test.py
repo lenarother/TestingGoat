@@ -26,11 +26,6 @@ class NewVisitorTest(StaticLiveServerTestCase):
         super().setUpClass()
         cls.server_url = cls.live_server_url
 
-    @classmethod
-    def tearDownClass(cls):
-        if cls.server_url == cls.live_server_url:
-            super().tearDownClass()
-
     def setUp(self):
         # setup firefox_capabilities since Firefox driver isnot working
         # since Firefox 47.0 and will be disabled in the future
