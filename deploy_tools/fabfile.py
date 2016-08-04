@@ -38,7 +38,7 @@ def _update_settings(project_folder, site_name):
     sed(settings_path, "DEBUG = True", "DEBUG = False")
     sed(settings_path,
         'ALLOWED_HOSTS = .+$',
-        'ALLOWED_HOSTS = [{}]'.format(site_name)
+        'ALLOWED_HOSTS = ["{}"]'.format(site_name)
     )
     secret_key_file = os.path.join(project_folder, 'superlists', 'secret_key.py')
     if not exists(secret_key_file):
