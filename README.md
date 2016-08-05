@@ -98,3 +98,10 @@
 * overwriting form constructor to let the form know another view
 * method validate_unique in form and model
 * how to test views
+
+### Chapter 13
+* js testing fremwork e.g. qunit
+
+### Session 14: 05.08.2016
+* http://testing-goat-staging.mrother.com
+* http://testing-goat.mrother.com
