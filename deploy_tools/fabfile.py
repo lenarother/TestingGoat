@@ -28,9 +28,9 @@ def _get_latest_source(site_folder):
     else:
         run('git clone {} {}'.format(REPO_URL, site_folder))
     current_commit = local("git log -n 1 --format=%H", capture=True)
-    print(current_commit)
-    print(type(current_commit))
+    print('Deploying current commit: {}'.format(current_commit))
     run('cd {} && git reset --hard'.format(site_folder))
+    run('cd {} && git pull'.format(site_folder))
 
 
 def _update_settings(project_folder, site_name):
